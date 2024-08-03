@@ -36,7 +36,7 @@ To get started with the Wardawn Prototype, follow these steps:
 
 2. **Install Unity:**
 
-   - Ensure you have Unity Hub installed. The recommended version for this project is Unity 2021.3.2f1 or later.
+   - Ensure you have Unity Hub installed. The recommended version for this project is Unity 2022.3.33f1 or later.
    - Open Unity Hub, select **Open**, and navigate to the cloned repository folder to open the project.
 
 3. **Install Git LFS:**
