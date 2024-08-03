@@ -1,1 +1,12 @@
-text=auto
+# Auto-detect text files and ensure consistent LF line endings
+* text=auto
+
+# Explicitly declare text files we want with specific line endings
+*.cs  text eol=lf
+*.prefab text eol=lf
+*.meta text eol=lf
+
+# Declare binary files
+*.png binary
+*.jpg binary
+*.dll binary
