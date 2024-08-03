@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerMovementController : MonoBehaviour
+public class PlayerMovementController : Entity
 {
     [Header("Movement")]
     public float moveSpeed;
@@ -24,13 +24,15 @@ public class PlayerMovementController : MonoBehaviour
     [HideInInspector] public float sprintSpeed;
     [HideInInspector] public float dodgeSpeed;
 
-    Rigidbody rb;
-    bool readyToJump;
-    bool grounded;
-    Vector3 moveDirection;
+    private Rigidbody rb;
+    private bool readyToJump;
+    private bool grounded;
+    private Vector3 moveDirection;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+        
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
@@ -121,5 +123,19 @@ public class PlayerMovementController : MonoBehaviour
     public bool IsGrounded()
     {
         return grounded;
+    }
+    public override void TakeDamage(float amount)
+    {
+        currentHealth -= amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        if (!IsAlive())
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Debug.Log("Player has died.");
     }
 }

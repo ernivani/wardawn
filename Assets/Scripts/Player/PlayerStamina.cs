@@ -14,8 +14,12 @@ public class PlayerStamina : MonoBehaviour
     private float currentStamina;
     private bool canSprint;
 
+    private PlayerMovementController playerController;
+
     private void Start()
     {
+        playerController = GetComponent<PlayerMovementController>();
+
         currentStamina = maxStamina;
         canSprint = true;
     }
