@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
@@ -31,12 +29,17 @@ public class PlayerInput : MonoBehaviour
 
     private void HandleInput()
     {
-        // Check for sprint input
+        HandleSprintInput();
+        HandleJumpInput();
+        HandleDodgeInput();
+    }
+
+    private void HandleSprintInput()
+    {
         bool wasSprinting = isSprinting;
         isSprinting = Input.GetKey(sprintKey) && staminaController.CanSprint() && movementController.IsGrounded() && IsMoving();
 
-        // Handle sprint color change
-        if (!isDodging) // Only change color if not dodging
+        if (!isDodging)
         {
             if (isSprinting && !wasSprinting)
             {
@@ -49,14 +52,18 @@ public class PlayerInput : MonoBehaviour
                 colorController.ResetColor();
             }
         }
+    }
 
-        // Handle jump input
-        if (Input.GetKey(jumpKey))
+    private void HandleJumpInput()
+    {
+        if (Input.GetKeyDown(jumpKey) && movementController.IsGrounded())
         {
             movementController.Jump();
         }
+    }
 
-        // Handle dodge input
+    private void HandleDodgeInput()
+    {
         if (Input.GetKeyDown(sprintKey) && staminaController.CanDodge() && movementController.IsGrounded() && !isDodging && IsMoving())
         {
             StartCoroutine(dodgeController.Dodge());

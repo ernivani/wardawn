@@ -3,11 +3,13 @@ using UnityEngine.UI;
 
 public class PlayerStamina : MonoBehaviour
 {
-    [Header("Stamina")]
+    [Header("Stamina Settings")]
     public float maxStamina = 100f;
     public float staminaRegenRate = 5f;
     public float sprintStaminaCost = 1f;
     public float dodgeStaminaCost = 10f;
+    public float regenDelay = 1.0f;
+    private float regenTimer;
 
     public Image staminaBar;
 
@@ -31,25 +33,26 @@ public class PlayerStamina : MonoBehaviour
 
     private void HandleStamina()
     {
-        if (PlayerInput.isSprinting && currentStamina > 0)
+        if (PlayerInput.isSprinting)
         {
             currentStamina -= sprintStaminaCost * Time.deltaTime;
+            regenTimer = regenDelay;
         }
-        else if (!PlayerInput.isSprinting && currentStamina < maxStamina)
+        else
         {
-            currentStamina += staminaRegenRate * Time.deltaTime;
+            if (regenTimer > 0)
+            {
+                regenTimer -= Time.deltaTime;
+            }
+            else
+            {
+                currentStamina += staminaRegenRate * Time.deltaTime;
+            }
         }
 
         currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
 
-        if (currentStamina <= 0)
-        {
-            canSprint = false;
-        }
-        else
-        {
-            canSprint = true;
-        }
+        canSprint = currentStamina > 0;
 
         if (staminaBar != null)
         {

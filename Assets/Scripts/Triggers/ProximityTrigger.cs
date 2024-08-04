@@ -12,7 +12,11 @@ public class ProximityTrigger : MonoBehaviour
     [Header("UI")]
     public TextMeshProUGUI text;
 
+    [Header("Keybindings")]
+    public KeyCode interactionKey = KeyCode.E;
+
     private float _squaredDetectionRadius;
+    private bool _wasInRangeLastFrame;
 
     private void Start()
     {
@@ -23,14 +27,18 @@ public class ProximityTrigger : MonoBehaviour
     {
         bool playerInRange = IsPlayerInRange();
 
-        text.text = playerInRange ? "Interact" : "";
+        if (playerInRange != _wasInRangeLastFrame)
+        {
+            text.text = playerInRange ? "Interact" : "";
+            _wasInRangeLastFrame = playerInRange;
+        }
 
         MyInput(playerInRange);
     }
 
     private void MyInput(bool playerInRange)
     {
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        if (playerInRange && Input.GetKeyDown(interactionKey))
         {
             Interact();
         }
@@ -38,7 +46,15 @@ public class ProximityTrigger : MonoBehaviour
 
     private void Interact()
     {
-        gameObject.GetComponent<Interactable>().Interact();
+        Interactable interactable = gameObject.GetComponent<Interactable>();
+        if (interactable != null)
+        {
+            interactable.Interact();
+        }
+        else
+        {
+            Debug.LogError("Interactable component not found on the game object.");
+        }
     }
 
     private bool IsPlayerInRange()

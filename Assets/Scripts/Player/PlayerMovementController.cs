@@ -54,6 +54,7 @@ public class PlayerMovementController : Entity
     {
         ApplyGravity();
         MovePlayer();
+        SpeedControl();
     }
 
     private void ApplyGravity()

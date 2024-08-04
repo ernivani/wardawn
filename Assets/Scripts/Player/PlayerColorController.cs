@@ -8,7 +8,10 @@ public class PlayerColorController : MonoBehaviour
     private void Start()
     {
         playerRenderer = GetComponent<PlayerMovementController>().playerRenderer;
-        originalColor = playerRenderer.material.color;
+        if (playerRenderer != null)
+        {
+            originalColor = playerRenderer.material.color;
+        }
     }
 
     public void ChangeColor(Color color)

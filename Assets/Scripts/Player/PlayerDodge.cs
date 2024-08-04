@@ -9,9 +9,8 @@ public class PlayerDodge : MonoBehaviour
     private PlayerMovementController movementController;
     private PlayerStamina staminaController;
     private PlayerColorController colorController;
-
     private bool canDodge;
-
+    
     private void Start()
     {
         movementController = GetComponent<PlayerMovementController>();
@@ -23,27 +22,29 @@ public class PlayerDodge : MonoBehaviour
 
     public IEnumerator Dodge()
     {
-        Debug.Log("Player dodged."); // Log when the player dodges
-
-        PlayerInput.isDodging = true;
-        canDodge = false;
-        staminaController.DeductStamina(staminaController.dodgeStaminaCost);
-        colorController.ChangeColor(Color.red);
-
-        yield return new WaitForSeconds(movementController.dodgeDuration);
-
-        PlayerInput.isDodging = false;
-        if (PlayerInput.isSprinting)
+        if (canDodge && staminaController.CanDodge())
         {
-            colorController.ChangeColor(Color.green);
-        }
-        else
-        {
-            colorController.ResetColor();
-        }
+            Debug.Log("Player dodged.");
+            PlayerInput.isDodging = true;
+            canDodge = false;
 
-        yield return new WaitForSeconds(dodgeCooldown);
+            staminaController.DeductStamina(staminaController.dodgeStaminaCost);
+            colorController.ChangeColor(Color.red);
 
-        canDodge = true;
+            yield return new WaitForSeconds(movementController.dodgeDuration);
+
+            PlayerInput.isDodging = false;
+            if (PlayerInput.isSprinting)
+            {
+                colorController.ChangeColor(Color.green);
+            }
+            else
+            {
+                colorController.ResetColor();
+            }
+
+            yield return new WaitForSeconds(dodgeCooldown);
+            canDodge = true;
+        }
     }
 }
