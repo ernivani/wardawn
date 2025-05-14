@@ -47,7 +47,7 @@ public class PlayerMovementController : Entity
     {
         grounded = Physics.Raycast(transform.position, Vector3.down, playerRenderer.bounds.extents.y + 0.3f, whatIsGround);
 
-        rb.drag = grounded ? groundDrag : airDrag;
+        rb.linearDamping = grounded ? groundDrag : airDrag;
     }
 
     private void FixedUpdate()
@@ -92,7 +92,7 @@ public class PlayerMovementController : Entity
             readyToJump = false;
 
             // Reset vertical velocity before jumping
-            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
 
@@ -107,18 +107,18 @@ public class PlayerMovementController : Entity
 
     public void SpeedControl()
     {
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         float maxSpeed = PlayerInput.isDodging ? dodgeSpeed : (PlayerInput.isSprinting ? sprintSpeed : walkSpeed);
 
         // Clamp horizontal velocity
         if (flatVel.magnitude > maxSpeed)
         {
             Vector3 limitedVel = flatVel.normalized * maxSpeed;
-            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
         }
 
         // Optional: Clamp vertical velocity to prevent excessive speed on falls
-        rb.velocity = new Vector3(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -maxSpeed, jumpForce), rb.velocity.z);
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -maxSpeed, jumpForce), rb.linearVelocity.z);
     }
 
     public bool IsGrounded()
